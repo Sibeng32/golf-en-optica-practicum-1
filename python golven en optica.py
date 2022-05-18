@@ -117,64 +117,6 @@ efk2 = (ef1k2+ef2k2+ef3k2)/3
 efk3 = (ef1k3+ef2k3+ef3k3)/3
 efk4 = (ef1k4+ef2k4+ef3k4)/3
 efn3 = (ef1n3+ef2n3+ef3n3)/3
-#%%
-
-# We maken aan deze data een fit met de functie y = A + B x
-# Voor deze specifieke dataset kunnen we als schatting voor A de waarde gemeten 
-# bij de asafsnede nemen (0.0 dus), en voor B, de helling, ongeveer 0.1
-function_plot,ax = plt.subplots(1)
-ax.errorbar(t,efk2,xerr=0.00000001,yerr=1,fmt='k.')
-
-# Definieer een Python-functie die het model bevat, in dit geval een 
-# rechte lijn
-# B is een vector met parameters, in dit geval twee (A = B[0], B = B[1])
-# x is de array met x-waarden
-def eigenfunctie(t,y):
-    fn=y*t
-    return fn
-
-	
-# Definieer het model-object om te gebruiken in odr
-odr_model = odr.Model(eigenfunctie)
-	
-## Definieer een RealData object
-## Een RealData-object vraagt om de onzekerheden in beide richtingen. 
-odr_data  = odr.RealData(t,efk2,sx=0.000000001,sy=1)
-	
-# Maak een ODR object met data, model en startwaarden
-# Je geeft startwaarden voor parameters mee bij keyword beta0
-odr_obj   = odr.ODR(
-    odr_data,
-    odr_model,
-    beta0=[
-        ]
-    )
-	
-
-
-# Voer de fit uit
-# Dit gebeurt expliciet door functie .run() aan te roepen
-odr_res   = odr_obj.run()
-	
-# Haal resultaten uit het resultaten-object:
-# De beste schatters voor de parameters
-par_best = odr_res.beta
-# De (EXTERNE) onzekerheden voor deze parameters
-par_sig_ext = odr_res.sd_beta
-# De (INTERNE!) covariantiematrix
-par_cov_ext = odr_res.cov_beta 
-# De chi-kwadraat en de gereduceerde chi-kwadraat van deze fit
-chi2 = odr_res.sum_square
-chi2red = odr_res.res_var
-# Een compacte weergave van de belangrijkste resultaten als output
-odr_res.pprint()
-	
-# Hier plotten we ter controle de fit met de dataset
-plt.title('Nog invullen')
-plt.ylabel('$G$ (e)')
-plt.xlabel('$G$ (e)')
-xplot=np.linspace(1,8, 8)
-ax.plot(xplot,eigenfunctie(xplot),'r-')
 
 
 #%%
@@ -185,7 +127,7 @@ import matplotlib.pyplot as plt
 	
 # Fictieve dataset x- en y-waarden, beide met onzekerheid
 x = np.array([1,2,3,4,5,6,7,8])
-sig_x = np.array([0,0,0,0,0,0,0,0])
+sig_x = np.array([0.0001,0.0001,0.0001,0.0001,0.0001,0.0001,0.0001,0.0001])
 y = efk2
 sig_y = np.array([1,1,1,1,1,1,1,1])
 	
@@ -245,9 +187,10 @@ chi2 = odr_res.sum_square
 chi2red = odr_res.res_var
 # (6e) Een compacte weergave van de belangrijkste resultaten als output
 odr_res.pprint()
-	
+
 # Hier plotten we ter controle de fit met de dataset (niet opgemaakt)
 xplot=np.linspace(1,8, 8)
-ax.plot(xplot,'r-')
+ax.plot(xplot, f([par_best[0]],xplot),'r-')
+
 
 
