@@ -6,7 +6,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import math
 from scipy.optimize import curve_fit
-import pandas as pd
+
 
 
 folder = 'C:/Users/saban/OneDrive/Documents/GitHub/golf-en-optica-practicum-1/'
