@@ -22,12 +22,12 @@ proefdata = np.genfromtxt(filename, delimiter=',', skip_header=1)
 ef1 = proefdata[:,0]
 ef2 = proefdata[:,1]
 ef = (ef1+ef2)/2
-t = np.linspace(1,8, 8)
+n= np.linspace(1,8, 8)
 f_err = 1 # onzekerheid is 1 Hz
 
 plt.figure()
-plt.errorbar(t, ef1, xerr=0.0, yerr=f_err, fmt='r.', label= 'meting 1')
-plt.errorbar(t, ef2, xerr=0.0, yerr=f_err, fmt='b.', label= 'meting 2')
+plt.errorbar(n, ef1, xerr=0.0, yerr=f_err, fmt='r.', label= 'meting 1')
+plt.errorbar(n, ef2, xerr=0.0, yerr=f_err, fmt='b.', label= 'meting 2')
 
 # opmaak
 plt.title('gevonden frequenties voor staande golven van kopere draad 0.2 mm')
@@ -37,8 +37,8 @@ plt.xlabel('n-de eigenfrequentie')
 plt.show()
 #%% data fit
 
-n = t
 
+n = n.reshape(-1,1)
 f,ax = plt.subplots(1)
 ax.errorbar(n,ef,xerr=0,yerr= f_err,fmt='k.')
 
@@ -46,14 +46,9 @@ ax.errorbar(n,ef,xerr=0,yerr= f_err,fmt='k.')
 A_start=0.5
 B_start=1.5
 
-# =============================================================================
-#  (1) Definieer een Python-functie die het model bevat, in dit geval een 
-#  rechte lijn
-#  B is een vector met parameters, in dit geval twee (A = B[0], B = B[1])
-#  x is de array met x-waarden
-# =============================================================================
 def f(ef, n):
-    return ef*n
+    f = ef/n
+    return f
 
 ## (2) Definieer het model-object om te gebruiken in odr
 odr_model = odr.Model(f)
