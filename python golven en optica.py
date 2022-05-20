@@ -117,21 +117,70 @@ efk3 = (ef1k3+ef2k3+ef3k3)/3
 efk4 = (ef1k4+ef2k4+ef3k4)/3
 efn3 = (ef1n3+ef2n3+ef3n3)/3
 
-#%% ideale fit voor kopere draad van 0.2 mm (k2)
+#%%  onzekerheiden van meetwaardes
 
+#hierberekenen we alle standaardeviaties per meetpunt en doen het in een array
+bruh = np.array([0,1,2,3,4,5,6,7])
+o1 = []
+for i in bruh:
+    d = i
+    a = ef1k2[d]
+    b = ef2k2[d]
+    c = ef3k2[d]
+    stdi = np.std([a,b,c])
+    o1.append(stdi)
+    
+# hier berekenen we de standaareviaties van het gemiddelde
+SDOMk2 = np.array(o1)/((3)**(1/2))
+
+o2 = []
+for i in bruh:
+    d = i
+    a = ef1k3[d]
+    b = ef2k3[d]
+    c = ef3k3[d]
+    stdi = np.std([a,b,c])
+    o2.append(stdi)
+    
+SDOMk3 = np.array(o2)/((3)**(1/2))
+o3 = []
+for i in bruh:
+    d = i
+    a = ef1k4[d]
+    b = ef2k4[d]
+    c = ef3k4[d]
+    stdi = np.std([a,b,c])
+    o3.append(stdi)
+    
+SDOMk4 = np.array(o3)/((3)**(1/2))
+o4 = []
+for i in bruh:
+    d = i
+    a = ef1n3[d]
+    b = ef2n3[d]
+    c = ef3n3[d]
+    stdi = np.std([a,b,c])
+    o4.append(stdi)
+    
+SDOMn3 = np.array(o4)/((3)**(1/2))
+
+
+
+#%% ideale fit voor kopere draad van 0.2 mm (k2)
 #nummer van eigenfreq van betreffende draad
 x = np.array([1,2,3,4,5,6,7,8]) 
 #gevonden eigenfrequenties
 y = efk2
 
+
 #alle onzekerheden
 sig_x = np.array([0.0001,0.0001,0.0001,0.0001,0.0001,0.0001,0.0001,0.0001])
 #doordat we de meting 3 keer hebben uitgevoerd wordt de onzekerheid kleiner.
-sig_y = np.array([1,1,1,1,1,1,1,1])/2
+sig_y = SDOMk2
 	
 # Dit is een niet opgemaakte sub plot voor de stippen
 f,ax = plt.subplots(1)
-ax.errorbar(x,y,xerr=sig_x,yerr=sig_y,fmt='k.')
+ax.errorbar(x,y,xerr=sig_x,yerr=sig_y,fmt='k.', label='gemiddelde meetwaarden')
 #ax.show()
 freq_start=0
 	
@@ -171,6 +220,11 @@ chi2red = odr_res.res_var
 # Hier plotten we ter controle de fit met de dataset met opmaak
 # En printen we de gereduceerde chi kwadraat uit.
 print('De gereduceerde chi-kwadraat van k2 is:', chi2red)
+
+plt.title('fit ideale snaar van koperen draad 0.2 mm ')
+plt.legend(loc='upper left',fontsize=12)
+plt.ylabel('frequentie in Hz')
+plt.xlabel('n-de eigenfrequentie')
 xplot=np.linspace(1,8, 8)
 ax.plot(xplot, f([par_best[0]],xplot),'r-')
 
@@ -183,11 +237,11 @@ y = efk3
 
 #alle onzekerheden
 sig_x = np.array([0.0001,0.0001,0.0001,0.0001,0.0001,0.0001,0.0001,0.0001])
-sig_y = np.array([1,1,1,1,1,1,1,1])/2
+sig_y = np.array([1,1,1,1,1,1,1,1])/3
 	
 # Dit is een niet opgemaakte sub plot voor de stippen
 f,ax = plt.subplots(1)
-ax.errorbar(x,y,xerr=sig_x,yerr=sig_y,fmt='k.')
+ax.errorbar(x,y,xerr=sig_x,yerr=sig_y,fmt='k.',label='gemiddelde meetwaarden')
 #ax.show()
 freq_start=0
 	
@@ -226,7 +280,12 @@ chi2red = odr_res.res_var
 
 # Hier plotten we ter controle de fit met de dataset met opmaak
 # En printen we de gereduceerde chi kwadraat uit.
+
 print('De gereduceerde chi-kwadraat van k3 is:', chi2red)
+plt.title('fit ideale snaar van koperen draad 0.3 mm')
+plt.legend(loc='upper left',fontsize=12)
+plt.ylabel('frequentie in Hz')
+plt.xlabel('n-de eigenfrequentie')
 xplot=np.linspace(1,8, 8)
 ax.plot(xplot, f([par_best[0]],xplot),'r-')
 #%% ideale fit voor kopere draad van 0.4 mm (k4)
@@ -238,11 +297,11 @@ y = efk4
 
 #alle onzekerheden
 sig_x = np.array([0.0001,0.0001,0.0001,0.0001,0.0001,0.0001,0.0001,0.0001])
-sig_y = np.array([1,1,1,1,1,1,1,1])/2
+sig_y = np.array([1,1,1,1,1,1,1,1])/3
 	
 # Dit is een niet opgemaakte sub plot voor de stippen
 f,ax = plt.subplots(1)
-ax.errorbar(x,y,xerr=sig_x,yerr=sig_y,fmt='k.')
+ax.errorbar(x,y,xerr=sig_x,yerr=sig_y,fmt='k.', label='gemiddelde meetwaarden')
 #ax.show()
 freq_start=0
 	
@@ -282,6 +341,10 @@ chi2red = odr_res.res_var
 # Hier plotten we ter controle de fit met de dataset met opmaak
 # En printen we de gereduceerde chi kwadraat uit.
 print('De gereduceerde chi-kwadraat van k4 is:', chi2red)
+plt.title('fit ideale snaar  van koperen draad 0.4 mm')
+plt.legend(loc='upper left',fontsize=12)
+plt.ylabel('frequentie in Hz')
+plt.xlabel('n-de eigenfrequentie')
 xplot=np.linspace(1,8, 8)
 ax.plot(xplot, f([par_best[0]],xplot),'r-')
 #%% ideale fit voor nikkel draad van 0.3 mm (n3)
@@ -297,7 +360,7 @@ sig_y = np.array([1,1,1,1,1,1,1,1])/3
 	
 # Dit is een niet opgemaakte sub plot voor de stippen
 f,ax = plt.subplots(1)
-ax.errorbar(x,y,xerr=sig_x,yerr=sig_y,fmt='k.')
+ax.errorbar(x,y,xerr=sig_x,yerr=sig_y,fmt='k.',label='gemiddelde meetwaarden')
 #ax.show()
 freq_start=0
 	
@@ -337,6 +400,10 @@ chi2red = odr_res.res_var
 # Hier plotten we ter controle de fit met de dataset met opmaak
 # En printen we de gereduceerde chi kwadraat uit.
 print('De gereduceerde chi-kwadraat van n3 is:', chi2red)
+plt.title('fit ideale snaar van nikkel draad 0.3 mm')
+plt.legend(loc='upper left',fontsize=12)
+plt.ylabel('frequentie in Hz')
+plt.xlabel('n-de eigenfrequentie')
 xplot=np.linspace(1,8, 8)
 ax.plot(xplot, f([par_best[0]],xplot),'r-')
 
@@ -346,10 +413,10 @@ L = 1.453 # lengte draad in meter +- 0.005
 g = 9.81  # zwaartekrachtsversnelling in m/s^2 zonder onzekerheid
 Pk = 8960 # dichtheid koper in kg/m3
 Pn = 8902 # dichtheid nikkel in kg/m3
-Yk_mi = 121  # minimale youngs modulus van koper in Gpa
-Yk_ma = 133  # maximale youngs modulus van koper in Gpa
-Yn_mi = 190  # minimale youngs modulus van nikkel in Gpa
-Yn_ma = 220  # minimale youngs modulus van nikkel in Gpa
+Yk_mi = 121*10**9  # minimale youngs modulus van koper in Gpa
+Yk_ma = 133*10**9  # maximale youngs modulus van koper in Gpa
+Yn_mi = 190*10**9 # minimale youngs modulus van nikkel in Gpa
+Yn_ma = 220*10**9 # minimale youngs modulus van nikkel in Gpa
 sig_r = 0.000005 # onzekerheid van de straal van draad
 
 f_upperk2 = (1/(2*(L-0.005)))*((((m+0.0002)*g))/(np.pi*Pk*(0.0001-sig_r)**2))**(1/2)
@@ -362,17 +429,17 @@ f_lowerk3 = (1/(2*(L+0.005)))*((((m-0.0002)*g))/(np.pi*Pk*(0.00015+sig_r)**2))**
 f_lowerk4 = (1/(2*(L+0.005)))*((((m-0.0002)*g))/(np.pi*Pk*(0.0002+sig_r))**2)**(1/2)
 f_uppern3 = (1/(2*(L+0.005)))*((((m-0.0002)*g))/(np.pi*Pk*(0.00015+sig_r)**2))**(1/2)
 
-B_upperk2 = (np.pi**3)*((0.0001-sig_r)**(4))*Yk_ma/(4*(m+0.0002)*9.81*(L+0.005)**2)
-B_upperk3 = (np.pi**3)*((0.00015-sig_r)**(4))*Yk_ma/(4*(m+0.0002)*9.81*(L+0.005)**2)
-B_upperk4 = (np.pi**3)*((0.0002-sig_r)**(4))*Yk_ma/(4*(m+0.0002)*9.81*(L+0.005)**2)
-B_uppern3 = (np.pi**3)*((0.00015-sig_r)**(4))*Yn_ma/(4*(m+0.0002)*9.81*(L+0.005)**2)
+B_upperk2 = (np.pi**3)*((0.0001-sig_r)**(4))*Yk_ma/(4*(m-0.0002)*9.81*(L-0.005)**2)
+B_upperk3 = (np.pi**3)*((0.00015-sig_r)**(4))*Yk_ma/(4*(m-0.0002)*9.81*(L-0.005)**2)
+B_upperk4 = (np.pi**3)*((0.0002-sig_r)**(4))*Yk_ma/(4*(m-0.0002)*9.81*(L-0.005)**2)
+B_uppern3 = (np.pi**3)*((0.00015-sig_r)**(4))*Yn_ma/(4*(m-0.0002)*9.81*(L-0.005)**2)
 
-B_lowerk2 = (np.pi**3)*((0.0001+sig_r)**(4))*Yk_ma/(4*(m-0.0002)*9.81*(L-0.005)**2)
-B_lowerk3 = (np.pi**3)*((0.00015+sig_r)**(4))*Yk_ma/(4*(m-0.0002)*9.81*(L-0.005)**2)
-B_lowerk4 = (np.pi**3)*((0.0002+sig_r)**(4))*Yk_ma/(4*(m-0.0002)*9.81*(L-0.005)**2)
-B_lowern3 = (np.pi**3)*((0.00015+sig_r)**(4))*Yn_ma/(4*(m-0.0002)*9.81*(L-0.005)**2)
+B_lowerk2 = (np.pi**3)*((0.0001+sig_r)**(4))*Yk_ma/(4*(m+0.0002)*9.81*(L+0.005)**2)
+B_lowerk3 = (np.pi**3)*((0.00015+sig_r)**(4))*Yk_ma/(4*(m+0.0002)*9.81*(L+0.005)**2)
+B_lowerk4 = (np.pi**3)*((0.0002+sig_r)**(4))*Yk_ma/(4*(m+0.0002)*9.81*(L+0.005)**2)
+B_lowern3 = (np.pi**3)*((0.00015+sig_r)**(4))*Yn_ma/(4*(m+0.0002)*9.81*(L+0.005)**2)
 
-#%%  fit voor kopere draad van 0.2mm (k2) met youngs modulus met upper and lower bounds
+#%% fit voor kopere draad van 0.2mm (k2) met youngs modulus met upper and lower bounds
 
 #nummer van eigenfreq van betreffende draad
 x = np.array([1,2,3,4,5,6,7,8]) 
@@ -380,8 +447,8 @@ x = np.array([1,2,3,4,5,6,7,8])
 y = efk2
 
 #alle onzekerheden
-sig_x = np.array([0.0001,0.0001,0.0001,0.0001,0.0001,0.0001,0.0001,0.0001])
-sig_y = np.array([1,1,1,1,1,1,1,1])/3
+sig_x = np.array([1,1,1,1,1,1,1,1])*10**(-20)
+sig_y = SDOMk2
 	
 # Dit is een niet opgemaakte sub plot voor de stippen
 f,ax = plt.subplots(1)
@@ -424,7 +491,7 @@ chi2red = odr_res.res_var
 # En printen we de gereduceerde chi kwadraat uit.
 print('De upper gereduceerde chi-kwadraat van k2 is:', chi2red)
 xplot=np.linspace(1,8, 8)
-ax.plot(xplot, f(xplot,[par_best[0]]),'r-')
+ax.plot(xplot, f(xplot,[par_best[0]]),'r-',label= 'fit met upperbounds')
 
 # =============================================================================
 # zelfde als hier boven maar lower bounds
@@ -465,9 +532,13 @@ chi2red = odr_res.res_var
 # En printen we de gereduceerde chi kwadraat uit.
 print('De lower gereduceerde chi-kwadraat van k2 is:', chi2red)
 xplot=np.linspace(1,8, 8)
-ax.plot(xplot, f(xplot,[par_best[0]]),'b--')
+ax.plot(xplot, f(xplot,[par_best[0]]),'b--', label= 'fit met lowerbounds')
+plt.title('fit niet ideale snaar van nikkel draad 0.3 mm')
+plt.legend(loc='upper left',fontsize=12)
+plt.ylabel('frequentie in Hz')
+plt.xlabel('n-de eigenfrequentie')
 
-#%%  fit voor kopere draad van 0.3mm (k3) met youngs modulus met upper and lower bounds
+#%% fit voor kopere draad van 0.3mm (k3) met youngs modulus met upper and lower bounds
 
 #nummer van eigenfreq van betreffende draad
 x = np.array([1,2,3,4,5,6,7,8]) 
@@ -480,7 +551,7 @@ sig_y = np.array([1,1,1,1,1,1,1,1])/3
 	
 # Dit is een niet opgemaakte sub plot voor de stippen
 f,ax = plt.subplots(1)
-ax.errorbar(x,y,xerr=sig_x,yerr=sig_y,fmt='k.')
+ax.errorbar(x,y,xerr=sig_x,yerr=sig_y,fmt='k.',label='gemiddelde meetwaarden')
 #ax.show()
 freq_start=0
 	
@@ -519,7 +590,7 @@ chi2red = odr_res.res_var
 # En printen we de gereduceerde chi kwadraat uit.
 print('De upper gereduceerde chi-kwadraat van k3 is:', chi2red)
 xplot=np.linspace(1,8, 8)
-ax.plot(xplot, f(xplot,[par_best[0]]),'r-')
+ax.plot(xplot, f(xplot,[par_best[0]]),'r-', label= 'fit met upperbounds')
 
 # =============================================================================
 # zelfde als hier boven maar lower bounds
@@ -560,9 +631,13 @@ chi2red = odr_res.res_var
 # En printen we de gereduceerde chi kwadraat uit.
 print('De lower gereduceerde chi-kwadraat van k3 is:', chi2red)
 xplot=np.linspace(1,8, 8)
-ax.plot(xplot, f(xplot,[par_best[0]]),'b--')
+ax.plot(xplot, f(xplot,[par_best[0]]),'b--', label= 'fit met lowerbounds')
+plt.title('fit niet ideale snaar van nikkel draad 0.3 mm')
+plt.legend(loc='upper left',fontsize=12)
+plt.ylabel('frequentie in Hz')
+plt.xlabel('n-de eigenfrequentie')
 
-#%%  fit voor kopere draad van 0.4mm (k4) met youngs modulus met upper and lower bounds
+#%% fit voor kopere draad van 0.4mm (k4) met youngs modulus met upper and lower bounds
 
 #nummer van eigenfreq van betreffende draad
 x = np.array([1,2,3,4,5,6,7,8]) 
@@ -575,7 +650,7 @@ sig_y = np.array([1,1,1,1,1,1,1,1])/3
 	
 # Dit is een niet opgemaakte sub plot voor de stippen
 f,ax = plt.subplots(1)
-ax.errorbar(x,y,xerr=sig_x,yerr=sig_y,fmt='k.')
+ax.errorbar(x,y,xerr=sig_x,yerr=sig_y,fmt='k.',label='gemiddelde meetwaarden')
 #ax.show()
 freq_start=0
 	
@@ -614,7 +689,7 @@ chi2red = odr_res.res_var
 # En printen we de gereduceerde chi kwadraat uit.
 print('De upper gereduceerde chi-kwadraat van k4 is:', chi2red)
 xplot=np.linspace(1,8, 8)
-ax.plot(xplot, f(xplot,[par_best[0]]),'r-')
+ax.plot(xplot, f(xplot,[par_best[0]]),'r-', label= 'fit met upperbounds')
 
 # =============================================================================
 # zelfde als hier boven maar lower bounds
@@ -655,8 +730,12 @@ chi2red = odr_res.res_var
 # En printen we de gereduceerde chi kwadraat uit.
 print('De lower gereduceerde chi-kwadraat van k4 is:', chi2red)
 xplot=np.linspace(1,8, 8)
-ax.plot(xplot, f(xplot,[par_best[0]]),'b--')
-#%%  fit voor nikkel draad van 0.3mm (23) met youngs modulus met upper and lower bounds
+ax.plot(xplot, f(xplot,[par_best[0]]),'b--', label= 'fit met lowerbounds')
+plt.title('fit niet ideale snaar van nikkel draad 0.3 mm')
+plt.legend(loc='upper left',fontsize=12)
+plt.ylabel('frequentie in Hz')
+plt.xlabel('n-de eigenfrequentie')
+#%% fit voor nikkel draad van 0.3mm (23) met youngs modulus met upper and lower bounds
 
 #nummer van eigenfreq van betreffende draad
 x = np.array([1,2,3,4,5,6,7,8]) 
@@ -669,7 +748,7 @@ sig_y = np.array([1,1,1,1,1,1,1,1])/3
 	
 # Dit is een niet opgemaakte sub plot voor de stippen
 f,ax = plt.subplots(1)
-ax.errorbar(x,y,xerr=sig_x,yerr=sig_y,fmt='k.')
+ax.errorbar(x,y,xerr=sig_x,yerr=sig_y,fmt='k.',label='gemiddelde meetwaarden')
 #ax.show()
 freq_start=0
 	
@@ -708,7 +787,7 @@ chi2red = odr_res.res_var
 # En printen we de gereduceerde chi kwadraat uit.
 print('De upper gereduceerde chi-kwadraat van n3 is:', chi2red)
 xplot=np.linspace(1,8, 8)
-ax.plot(xplot, f(xplot,[par_best[0]]),'r-')
+ax.plot(xplot, f(xplot,[par_best[0]]),'r-',label= 'fit met upperbounds')
 
 # =============================================================================
 # zelfde als hier boven maar lower bounds
@@ -748,5 +827,10 @@ chi2red = odr_res.res_var
 # Hier plotten we ter controle de fit met de dataset met opmaak
 # En printen we de gereduceerde chi kwadraat uit.
 print('De lower gereduceerde chi-kwadraat van n3 is:', chi2red)
+
 xplot=np.linspace(1,8, 8)
-ax.plot(xplot, f(xplot,[par_best[0]]),'b--')
+ax.plot(xplot, f(xplot,[par_best[0]]),'b--', label= 'fit met lowerbounds')
+plt.title('fit niet ideale snaar van nikkel draad 0.3 mm')
+plt.legend(loc='upper left',fontsize=12)
+plt.ylabel('frequentie in Hz')
+plt.xlabel('n-de eigenfrequentie')
